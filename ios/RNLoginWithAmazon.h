@@ -5,6 +5,8 @@
 #import <React/RCTBridgeModule.h>
 #endif
 
+#import <LoginWithAmazon/LoginWithAmazon.h>
+
 @interface RNLoginWithAmazon : NSObject <RCTBridgeModule>
 
 @end

@@ -1,16 +1,17 @@
 
 {
   "name": "react-native-login-with-amazon",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.8",
+  "description": "A React Native wrapper for the Login with Amazon iOS and Android SDKs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "login with amazon"
   ],
-  "author": "",
+  "author": "ianbattin",
   "license": "",
   "peerDependencies": {
     "react-native": "^0.41.2"
