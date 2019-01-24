@@ -55,7 +55,7 @@ RCT_EXPORT_METHOD(fetchUserData:(RCTResponseSenderBlock)callback)
 RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)callback)
 {
     [[AMZNAuthorizationManager sharedManager] signOut:^(NSError * _Nullable error) {
-        if (!error) {
+        if (error) {
             callback(@[[error userInfo]]);
         }
         

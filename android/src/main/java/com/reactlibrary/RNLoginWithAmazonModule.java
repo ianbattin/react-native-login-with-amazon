@@ -119,7 +119,7 @@ public class RNLoginWithAmazonModule extends ReactContextBaseJavaModule implemen
       @Override
       public void onSuccess(Void response) {
         // Set logged out state in UI
-        callback.invoke(null);
+        callback.invoke();
       }
       @Override
       public void onError(AuthError authError) {
