@@ -26,12 +26,9 @@ RCT_EXPORT_METHOD(login:(RCTResponseSenderBlock)callback)
                                             withHandler:^(AMZNAuthorizeResult *result, BOOL
                                                           userDidCancel, NSError *error) {
                                                 if (error) {
-                                                    callback(@[error]);
+                                                    callback(@[[error userInfo]]);
                                                 } else if (userDidCancel) {
-                                                    NSMutableDictionary* details = [NSMutableDictionary dictionary];
-                                                    [details setValue:@"User cancelled" forKey:NSLocalizedDescriptionKey];
-                                                    NSError *cancelledError = [NSError errorWithDomain:@"loginWithAmazon" code:1 userInfo:details];
-                                                    callback(@[cancelledError]);
+                                                    callback(@[@"User cancelled login with amazon"]);
                                                 } else {
                                                     // Authentication was successful.
                                                     // Obtain the access token and user profile data.
@@ -47,7 +44,7 @@ RCT_EXPORT_METHOD(fetchUserData:(RCTResponseSenderBlock)callback)
 {
     [AMZNUser fetch:^(AMZNUser *user, NSError *error) {
         if (error) {
-            callback(@[error]);
+            callback(@[[error userInfo]]);
         } else if (user) {
             callback(@[[NSNull null], user.profileData]);
         }
@@ -59,8 +56,7 @@ RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)callback)
 {
     [[AMZNAuthorizationManager sharedManager] signOut:^(NSError * _Nullable error) {
         if (!error) {
-            RCTLogInfo(@"Error occured!");
-            callback(@[error]);
+            callback(@[[error userInfo]]);
         }
         
         callback(@[[NSNull null]]);

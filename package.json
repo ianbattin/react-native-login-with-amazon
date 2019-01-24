@@ -1,7 +1,7 @@
 
 {
   "name": "react-native-login-with-amazon",
-  "version": "1.0.8",
+  "version": "1.0.11",
   "description": "A React Native wrapper for the Login with Amazon iOS and Android SDKs",
   "main": "index.js",
   "scripts": {
