@@ -37,9 +37,10 @@
 
 ## Usage
 ```javascript
-import RNLoginWithAmazon from 'react-native-login-with-amazon';
+import LoginWithAmazon from 'react-native-login-with-amazon';
 
-// TODO: What to do with the module?
-RNLoginWithAmazon;
+LoginWithAmazon.login((error, accessToken, profileData) => {
+  // ...
+}
 ```
   
