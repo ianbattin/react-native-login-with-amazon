@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:+'
-    compile files('libs/login-with-amazon-sdk.jar')
+    implementation 'com.facebook.react:react-native:+'
+    implementation files('libs/login-with-amazon-sdk.jar')
 }
   
