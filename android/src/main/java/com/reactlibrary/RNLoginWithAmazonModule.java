@@ -22,12 +22,50 @@ public class RNLoginWithAmazonModule extends ReactContextBaseJavaModule implemen
 
   private final ReactApplicationContext reactContext;
   private RequestContext requestContext;
+  private Callback authCallback;
+
+  //Need to check authCallback so we don't execute the same callback multiple times
+  //this will crash the app
+  private void executeAuthCallback(Object... args) {
+    if (authCallback != null) {
+      authCallback.invoke(args);
+    }
+    authCallback = null;
+  }
 
   public RNLoginWithAmazonModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
 
     this.requestContext = RequestContext.create(reactContext);
+    this.requestContext.registerListener(new AuthorizeListener() {
+
+      /* Authorization was completed successfully. */
+      @Override
+      public void onSuccess(AuthorizeResult result) {
+        /* Your app is now authorized for the requested scopes */
+        WritableMap userInfo = Arguments.createMap();
+        userInfo.putString("email", result.getUser().getUserEmail());
+        userInfo.putString("name", result.getUser().getUserName());
+        userInfo.putString("user_id", result.getUser().getUserId());
+        executeAuthCallback(null, result.getAccessToken(), userInfo);
+      }
+
+      /* There was an error during the attempt to authorize the
+      application. */
+      @Override
+      public void onError(AuthError ae) {
+        /* Inform the user of the error */
+        executeAuthCallback(ae.toString());
+      }
+
+      /* Authorization was cancelled before it could be completed. */
+      @Override
+      public void onCancel(AuthCancellation cancellation) {
+        /* Reset the UI to a ready-to-login state */
+        executeAuthCallback("The user cancelled the operation.");
+      }
+    });
   }
 
   @Override
@@ -47,38 +85,10 @@ public class RNLoginWithAmazonModule extends ReactContextBaseJavaModule implemen
   @Override
   public void onHostDestroy() {
   }
-
+  
   @ReactMethod
   public void login(final Callback callback) {
-    this.requestContext.registerListener(new AuthorizeListener() {
-
-      /* Authorization was completed successfully. */
-      @Override
-      public void onSuccess(AuthorizeResult result) {
-        /* Your app is now authorized for the requested scopes */
-        WritableMap userInfo = Arguments.createMap();
-        userInfo.putString("email", result.getUser().getUserEmail());
-        userInfo.putString("name", result.getUser().getUserName());
-        userInfo.putString("user_id", result.getUser().getUserId());
-        callback.invoke(null, result.getAccessToken(), userInfo);
-      }
-
-      /* There was an error during the attempt to authorize the
-      application. */
-      @Override
-      public void onError(AuthError ae) {
-        /* Inform the user of the error */
-        callback.invoke(ae.toString());
-      }
-
-      /* Authorization was cancelled before it could be completed. */
-      @Override
-      public void onCancel(AuthCancellation cancellation) {
-        /* Reset the UI to a ready-to-login state */
-        callback.invoke("The user cancelled the operation.");
-      }
-    });
-
+    authCallback = callback;
     AuthorizationManager.authorize(new AuthorizeRequest
       .Builder(requestContext)
       .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
